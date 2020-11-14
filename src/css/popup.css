@@ -1,0 +1,12 @@
+.awesomplete > ul { 
+    max-height: 80vh; 
+    overflow-y: auto; 
+    
+    
+}
+
+.awesomplete {
+    display: inline-block;
+    position: relative;
+    width: 60%;
+}

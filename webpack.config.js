@@ -19,6 +19,10 @@ if (fileSystem.existsSync(secretsPath)) {
 }
 
 var options = {
+  node: {
+    fs: "empty"
+  },
+  
   mode: process.env.NODE_ENV || "development",
   entry: {
     popup: path.join(__dirname, "src", "js", "popup.js"),
