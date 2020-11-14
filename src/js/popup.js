@@ -1,10 +1,32 @@
 import Teamwork from "teamwork-api"
-import Promise from 'Bluebird'
+import axios from "axios"
+import Promise from "bluebird"
 
-let controller = new window.AbortController();
+$.ajaxSetup({
+    cache: false
+});
+
+
+Promise.config({
+    // Enable warnings
+    warnings: true,
+    // Enable long stack traces
+    longStackTraces: true,
+    // Enable cancellation
+    cancellation: true,
+    // Enable monitoring
+    monitoring: true,
+    // Enable async hooks
+    asyncHooks: true,
+});
+
+const request = axios.CancelToken.source();
+
+var company = 'vatrox'
+var apiKey = 'ford135neon'
 
 //const tw = Teamwork('chess987soccer', 'vatrox')  
-const tw = Teamwork('ford135neon', 'vatrox')
+const tw = Teamwork(apiKey, company)
 
 var inputProjects = document.getElementById("projects");
 var awesompletePr = new Awesomplete(inputProjects, {
@@ -25,6 +47,10 @@ var awesompleteTk = new Awesomplete(inputTask, {
     autoFirst: true
 });
 
+
+var tasksProm
+
+
 tw.projects.get({ status: "ACTIVE" }).then(function (result) {
     console.log(result.projects)
     var activeProjects = result.projects
@@ -37,56 +63,108 @@ tw.projects.get({ status: "ACTIVE" }).then(function (result) {
             var projectList = activeProjects.filter(project => {
                 return project.name === $("#projects").val()
             })
-
-            tw.projects.getTasklists(projectList[0].id).then(function (result) {
-                console.log(result.tasklists)
-                var tasklistsNames = result.tasklists.map(function (project) { return project.name; });
-                $("#tasklists").on("keypress", function (e) {
-                    awesompleteTl.list = tasklistsNames;
-
-                });
-
-                $('#updateTasks').click(function () {
-
-                    //busca el objeto tasklist por el valor del nombre
-                    var tasklistArray = result.tasklists.filter(item => {
-                        return item.name === $("#tasklists").val()
-                    })
-
-                    tw.tasklist.getTasks(tasklistArray[0].id).then(function (result) {
-                        console.log(result)
-                        var taskNames = result['todo-items'].map(function (result) { return result.content; });
-
-                        $("#task").on("keypress", function (e) {
-                            awesompleteTk.list = taskNames;
-                        });
-
-                        $('#getTaskID').click(function () {
-                            //busca el objeto task por el valor del nombre
-                            var taskArray = result['todo-items'].filter(item => {
-                                return item.content === $("#task").val()
-                            })
-                            console.log(result['todo-items'])
-
-                            if (document.getElementById('copyTarget').textContent.length > 0) {
-                                //do something
-                                $("#copyTarget").text(taskArray[0].id);
-                            } else {
-                                document.getElementById("copyTarget").innerHTML = taskArray[0].id;
-                            }
-                        });
-                    });
+        }
 
 
+            let tasklistResult
+
+            $.ajax({
+                async: false,
+                cache: false,
+                url: `https://${company}.teamwork.com/projects/${projectList[0].id}/tasklists.json`,
+                headers: {
+                    "Authorization": "Basic " + btoa(apiKey + ":" + 'xx')
+                },
+                type: "GET",
+                success: function (result) {
+                    tasklistResult = result.tasklists
+                },
+                error: function (e) {
+                    console.dir(e);
+                }
+            });
+
+
+
+            console.log(tasklistResult)
+            var tasklistsNames = tasklistResult.map(function (project) { return project.name; });
+            $("#tasklists").on("keypress", function (e) {
+                awesompleteTl.list = tasklistsNames;
+
+            });
+            
+            var tasklistArray
+
+
+            $('#updateTasks').click(function () {
+
+                //busca el objeto tasklist por el valor del nombre
+                 tasklistArray = tasklistResult.filter(item => {
+                    return item.name === $("#tasklists").val()
                 })
 
+                let taskObjList
+
+                $.ajax({
+                    async: false,
+                    cache: false,
+                    url: `https://${company}.teamwork.com/tasklists/${tasklistArray[0].id}/tasks.json`,
+                    headers: {
+                        "Authorization": "Basic " + btoa(apiKey + ":" + 'xx')
+                    },
+                    type: "GET",
+                    success: function (resp) {
+                        taskObjList = resp['todo-items']
+                    },
+                    error: function (e) {
+                        console.dir(e);
+                    }
+                });
+
+
+                var taskNames = taskObjList.map(function (result) { return result.content; });
+                console.log(taskObjList)
+                $("#task").on("keypress", function (e) {
+                    awesompleteTk.list = taskNames;
+                });
 
 
 
-                console.log(taskNames)
 
 
+            })
 
+
+            $('#getTaskID').click(function () {
+                //busca el objeto task por el valor del nombre
+                let taskSync
+                $.ajax({
+                    async: false,
+                    cache: false,
+                    url: `https://${company}.teamwork.com/tasklists/${tasklistArray[0].id}/tasks.json`,
+                    headers: {
+                        "Authorization": "Basic " + btoa(apiKey + ":" + 'xx')
+                    },
+                    type: "GET",
+                    success: function (respuesta) {
+                        taskSync = respuesta['todo-items']
+                    },
+                    error: function (e) {
+                        console.dir(e);
+                    }
+                });
+
+                var taskArray = taskSync.filter(item => {
+                    return item.content === $("#task").val()
+                })
+                console.log(taskSync)
+
+                if (document.getElementById('copyTarget').textContent.length > 0) {
+                    //do something
+                    $("#copyTarget").text(taskArray[0].id);
+                } else {
+                    document.getElementById("copyTarget").innerHTML = taskArray[0].id;
+                }
 
             });
 
@@ -94,9 +172,30 @@ tw.projects.get({ status: "ACTIVE" }).then(function (result) {
 
 
 
-        }
+
+
+
+
+
+
+
+        
     });
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
