@@ -1,12 +1,17 @@
-.awesomplete > ul { 
+/* .awesomplete > ul { 
     max-height: 80vh; 
     overflow-y: auto; 
-    
-    
-}
+} */
 
+input{
+    margin: 5px;
+}
+p#entryApiKey{
+    margin-block-end: 0px;
+}
+/* 
 .awesomplete {
     display: inline-block;
     position: relative;
     width: 60%;
-}
+} */

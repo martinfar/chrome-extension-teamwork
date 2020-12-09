@@ -14,10 +14,11 @@ A basic foundation boilerplate for rich Chrome Extensions using [Webpack](https:
 6. Change the name of your extension on `src/manifest.json`.
 7. Run `yarn run start`
 8. Load your extension on Chrome following:
-    1. Access `chrome://extensions/`
-    2. Check `Developer mode`
-    3. Click on `Load unpacked extension`
-    4. Select the `build` folder.
+    1. Run `yarn build`
+    2. Access `chrome://extensions/`
+    3. Check `Developer mode`
+    4. Click on `Load unpacked extension`
+    5. Select the `build` folder.
 9. Have fun.
 
 ## Structure

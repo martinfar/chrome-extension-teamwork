@@ -12,5 +12,5 @@
     "128": "icon-128.png"
   },
   "manifest_version": 2,
-  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
+  "content_security_policy": "script-src 'self' 'unsafe-eval' https://unpkg.com https://fonts.googleapis.com https://cdn.rawgit.com https://code.jquery.com https://cdnjs.cloudflare.com https://ajax.googleapis.com; object-src 'self'"
 }
