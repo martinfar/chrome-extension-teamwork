@@ -84,9 +84,6 @@ $('#apiKeyButton').click(function () {
     var isbillable = 'true'
 
 
-    //const tw = Teamwork('chess987soccer', 'vatrox')  
-    //const tw = Teamwork(apiKey, company)
-
     var inputProjects = document.getElementById("projects");
     var awesompletePr = new Awesomplete(inputProjects, {
         minChars: 1,
@@ -390,15 +387,5 @@ function copyToClipboard(elem) {
 }
 
 
-// tw.projects.get({ status: "ACTIVE" }).then(function (result) {
-//     console.log(result.projects)
-//     var activeProjects = result.projects
-//     var nameArray = activeProjects.map(function (project) { return project.name; });
 
-//     awesomplete.list = nameArray
-// });
-
-//console.log (activeProjects.constructor.name)
-
-//
 
