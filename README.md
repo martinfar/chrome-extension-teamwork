@@ -1,6 +1,5 @@
-# Chrome Extension Webpack Boilerplate
-
-A basic foundation boilerplate for rich Chrome Extensions using [Webpack](https://webpack.github.io/) to help you write modular and modern Javascript code, load CSS easily and [automatic reload the browser on code changes](https://webpack.github.io/docs/webpack-dev-server.html#automatic-refresh).
+# Chrome Extension Teamwork Time Logging
+> This is a chrome extension that connect with the Teamwork API to mass log time from a google sheet 
 
 ## Developing a new extension
 
